@@ -51,28 +51,28 @@ function loadWordHistory() {
     try {
         const saved = localStorage.getItem('matchingGameWordHistory');
         if (!saved) {
-            return { date: getToday(), usedWords: [] };
+            return { date: getToday(), previousRoundWords: [] };
         }
         
         const history = JSON.parse(saved);
         
         // Check if it's a new day - if so, reset the history
         if (history.date !== getToday()) {
-            return { date: getToday(), usedWords: [] };
+            return { date: getToday(), previousRoundWords: [] };
         }
         
         return history;
     } catch (error) {
         console.error('Error loading word history:', error);
-        return { date: getToday(), usedWords: [] };
+        return { date: getToday(), previousRoundWords: [] };
     }
 }
 
-function saveWordHistory(usedWords) {
+function saveWordHistory(currentRoundWords) {
     try {
         const history = {
             date: getToday(),
-            usedWords: usedWords
+            previousRoundWords: currentRoundWords // Only store the current round as "previous" for next round
         };
         localStorage.setItem('matchingGameWordHistory', JSON.stringify(history));
     } catch (error) {
@@ -80,20 +80,20 @@ function saveWordHistory(usedWords) {
     }
 }
 
-function selectWordsForRound(allWords, previousWords) {
+function selectWordsForRound(allWords, previousRoundWords) {
     // If we have fewer words than needed, use all available words
     if (allWords.length <= WORDS_PER_ROUND) {
         return allWords;
     }
     
-    // Filter out previously used words
+    // Filter out words from the immediate previous round only
     const availableWords = allWords.filter(word => 
-        !previousWords.includes(word.german)
+        !previousRoundWords.includes(word.german)
     );
     
-    // If we don't have enough unused words, reset and use all words
+    // If we don't have enough unused words (shouldn't happen with 10 words and selecting 5),
+    // just select from all words
     if (availableWords.length < WORDS_PER_ROUND) {
-        // Reset history and select from all words
         const shuffled = shuffleArray(allWords);
         return shuffled.slice(0, WORDS_PER_ROUND);
     }
@@ -242,11 +242,11 @@ function initGame() {
     
     // Load word history and select words for this round
     const history = loadWordHistory();
-    currentGameWords = selectWordsForRound(words, history.usedWords);
+    currentGameWords = selectWordsForRound(words, history.previousRoundWords);
     
-    // Save updated history with newly selected words
-    const newUsedWords = [...history.usedWords, ...currentGameWords.map(w => w.german)];
-    saveWordHistory(newUsedWords);
+    // Save current round words as "previous" for next round
+    const currentRoundWords = currentGameWords.map(w => w.german);
+    saveWordHistory(currentRoundWords);
     
     // Shuffle German words
     const shuffledGerman = shuffleArray(currentGameWords);
