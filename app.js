@@ -398,6 +398,11 @@ function initGame() {
         wordItem.addEventListener('dragstart', handleDragStart);
         wordItem.addEventListener('dragend', handleDragEnd);
         
+        // Touch events for mobile
+        wordItem.addEventListener('touchstart', handleTouchStart);
+        wordItem.addEventListener('touchmove', handleTouchMove);
+        wordItem.addEventListener('touchend', handleTouchEnd);
+        
         // Setup tooltip if german_example exists
         if (word.german_example) {
             setupTooltipListeners(wordItem, word.german_example);
@@ -518,6 +523,164 @@ function handleDrop(e) {
     }
     
     return false;
+}
+
+// Touch handlers for mobile devices
+let touchDraggedElement = null;
+let touchClone = null;
+let touchStartX = 0;
+let touchStartY = 0;
+let touchOffsetX = 0;
+let touchOffsetY = 0;
+
+function handleTouchStart(e) {
+    // Don't interfere with audio button clicks
+    if (e.target.classList.contains('audio-btn') || e.target.closest('.audio-btn')) {
+        return;
+    }
+    
+    const wordItem = e.currentTarget;
+    touchDraggedElement = wordItem;
+    
+    const touch = e.touches[0];
+    const rect = wordItem.getBoundingClientRect();
+    
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+    touchOffsetX = touch.clientX - rect.left;
+    touchOffsetY = touch.clientY - rect.top;
+    
+    // Create a visual clone for dragging
+    touchClone = wordItem.cloneNode(true);
+    touchClone.classList.add('touch-dragging');
+    touchClone.style.position = 'fixed';
+    touchClone.style.left = `${rect.left}px`;
+    touchClone.style.top = `${rect.top}px`;
+    touchClone.style.width = `${rect.width}px`;
+    touchClone.style.height = `${rect.height}px`;
+    touchClone.style.zIndex = '1000';
+    touchClone.style.pointerEvents = 'none';
+    touchClone.style.opacity = '0.8';
+    document.body.appendChild(touchClone);
+    
+    // Add dragging class to original
+    wordItem.classList.add('dragging');
+    
+    // Prevent default to avoid scrolling
+    e.preventDefault();
+}
+
+function handleTouchMove(e) {
+    if (!touchDraggedElement || !touchClone) {
+        return;
+    }
+    
+    const touch = e.touches[0];
+    
+    // Move the clone
+    touchClone.style.left = `${touch.clientX - touchOffsetX}px`;
+    touchClone.style.top = `${touch.clientY - touchOffsetY}px`;
+    
+    // Find drop zone under touch point
+    const dropZones = document.querySelectorAll('.drop-zone');
+    let hoveredDropZone = null;
+    
+    dropZones.forEach(zone => {
+        zone.classList.remove('drag-over');
+        const rect = zone.getBoundingClientRect();
+        if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+            touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+            if (!zone.classList.contains('filled')) {
+                zone.classList.add('drag-over');
+                hoveredDropZone = zone;
+            }
+        }
+    });
+    
+    e.preventDefault();
+}
+
+function handleTouchEnd(e) {
+    if (!touchDraggedElement || !touchClone) {
+        return;
+    }
+    
+    // Get the touch point (use changedTouches for touchend)
+    const touch = e.changedTouches[0];
+    
+    // Find drop zone under touch point
+    const dropZones = document.querySelectorAll('.drop-zone');
+    let targetDropZone = null;
+    
+    dropZones.forEach(zone => {
+        const rect = zone.getBoundingClientRect();
+        if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+            touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+            targetDropZone = zone;
+        }
+        zone.classList.remove('drag-over');
+    });
+    
+    // Process the drop
+    if (targetDropZone && !targetDropZone.classList.contains('filled')) {
+        // Start timer on first move
+        if (!startTime) {
+            startTimer();
+        }
+        
+        const germanWord = touchDraggedElement.dataset.german;
+        const correctEnglish = touchDraggedElement.dataset.english;
+        const dropEnglish = targetDropZone.dataset.english;
+        
+        // Check if match is correct
+        const isCorrect = correctEnglish === dropEnglish;
+        
+        if (isCorrect) {
+            // Correct match
+            targetDropZone.classList.add('correct', 'filled');
+            targetDropZone.textContent = `${germanWord} → ${dropEnglish}`;
+            
+            // Remove the dragged element
+            touchDraggedElement.remove();
+            
+            // Update score
+            score += 10;
+            scoreElement.textContent = score;
+            
+            // Store match
+            matches[germanWord] = dropEnglish;
+            
+            // Check if all matches are complete
+            checkCompletion();
+        } else {
+            // Incorrect match
+            targetDropZone.classList.add('incorrect');
+            
+            // Remove incorrect class after animation
+            setTimeout(() => {
+                targetDropZone.classList.remove('incorrect');
+            }, 500);
+            
+            // Deduct score
+            score = Math.max(0, score - 5);
+            scoreElement.textContent = score;
+            
+            // Remove dragging class from original
+            touchDraggedElement.classList.remove('dragging');
+        }
+    } else {
+        // No valid drop zone, return to original position
+        touchDraggedElement.classList.remove('dragging');
+    }
+    
+    // Clean up
+    if (touchClone && touchClone.parentNode) {
+        touchClone.parentNode.removeChild(touchClone);
+    }
+    touchClone = null;
+    touchDraggedElement = null;
+    
+    e.preventDefault();
 }
 
 // Check if game is complete
