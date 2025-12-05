@@ -540,7 +540,7 @@ let touchOffsetY = 0;
 
 function handleTouchStart(e) {
     // Don't interfere with audio button clicks
-    if (e.target.classList.contains('audio-btn') || e.target.closest('.audio-btn')) {
+    if (e.target.closest('.audio-btn')) {
         return;
     }
     
@@ -635,8 +635,8 @@ function handleTouchEnd(e) {
     }
     
     // Clean up
-    if (touchClone && touchClone.parentNode) {
-        touchClone.parentNode.removeChild(touchClone);
+    if (touchClone) {
+        touchClone.remove();
     }
     touchClone = null;
     touchDraggedElement = null;
