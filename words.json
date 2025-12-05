@@ -1,0 +1,12 @@
+[
+  { "german": "der Hund", "english": "the dog" },
+  { "german": "die Katze", "english": "the cat" },
+  { "german": "das Haus", "english": "the house" },
+  { "german": "der Baum", "english": "the tree" },
+  { "german": "das Auto", "english": "the car" },
+  { "german": "die Blume", "english": "the flower" },
+  { "german": "der Tisch", "english": "the table" },
+  { "german": "das Buch", "english": "the book" },
+  { "german": "die Tür", "english": "the door" },
+  { "german": "das Fenster", "english": "the window" }
+]
