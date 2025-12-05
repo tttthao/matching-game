@@ -640,6 +640,7 @@ function refreshWordTable() {
             <tr class="${rowClass}">
                 <td>${escapeHtml(word.german)}</td>
                 <td>${escapeHtml(word.english)}</td>
+                <td>${word.german_example ? escapeHtml(word.german_example) : '<span class="empty-value">—</span>'}</td>
                 <td><span class="source-badge ${word.source}">${word.source}</span></td>
                 <td>${statusBadges.join(' ')}</td>
                 <td>${actions}</td>
