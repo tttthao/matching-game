@@ -8,9 +8,31 @@
 </head>
 <body>
     <div class="container">
-        <h1>German-English Matching Game</h1>
+        <div class="header">
+            <h1>German-English Matching Game</h1>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+                <span class="theme-icon">🌙</span>
+            </button>
+        </div>
+        
+        <div class="stats-panel">
+            <div class="stat-item">
+                <span class="stat-label">Games Played:</span>
+                <span id="games-played">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">High Score:</span>
+                <span id="high-score">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Best Time:</span>
+                <span id="best-time">--</span>
+            </div>
+        </div>
+        
         <div class="score-board">
             <div class="score">Score: <span id="score">0</span></div>
+            <div class="timer">Time: <span id="timer">0:00</span></div>
             <div class="message" id="message"></div>
         </div>
         
