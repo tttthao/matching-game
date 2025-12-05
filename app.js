@@ -538,6 +538,21 @@ let touchStartY = 0;
 let touchOffsetX = 0;
 let touchOffsetY = 0;
 
+// Find drop zone at given coordinates
+function findDropZoneAtPoint(x, y) {
+    const dropZones = document.querySelectorAll('.drop-zone');
+    let foundZone = null;
+    
+    dropZones.forEach(zone => {
+        const rect = zone.getBoundingClientRect();
+        if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+            foundZone = zone;
+        }
+    });
+    
+    return foundZone;
+}
+
 function handleTouchStart(e) {
     // Don't interfere with audio button clicks
     if (e.target.closest('.audio-btn')) {
@@ -586,21 +601,17 @@ function handleTouchMove(e) {
     touchClone.style.left = `${touch.clientX - touchOffsetX}px`;
     touchClone.style.top = `${touch.clientY - touchOffsetY}px`;
     
-    // Find drop zone under touch point
+    // Update drag-over styling on drop zones
     const dropZones = document.querySelectorAll('.drop-zone');
-    let hoveredDropZone = null;
+    const hoveredDropZone = findDropZoneAtPoint(touch.clientX, touch.clientY);
     
     dropZones.forEach(zone => {
         zone.classList.remove('drag-over');
-        const rect = zone.getBoundingClientRect();
-        if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
-            touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
-            if (!zone.classList.contains('filled')) {
-                zone.classList.add('drag-over');
-                hoveredDropZone = zone;
-            }
-        }
     });
+    
+    if (hoveredDropZone && !hoveredDropZone.classList.contains('filled')) {
+        hoveredDropZone.classList.add('drag-over');
+    }
     
     e.preventDefault();
 }
@@ -614,15 +625,10 @@ function handleTouchEnd(e) {
     const touch = e.changedTouches[0];
     
     // Find drop zone under touch point
-    const dropZones = document.querySelectorAll('.drop-zone');
-    let targetDropZone = null;
+    const targetDropZone = findDropZoneAtPoint(touch.clientX, touch.clientY);
     
-    dropZones.forEach(zone => {
-        const rect = zone.getBoundingClientRect();
-        if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
-            touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
-            targetDropZone = zone;
-        }
+    // Remove drag-over styling from all zones
+    document.querySelectorAll('.drop-zone').forEach(zone => {
         zone.classList.remove('drag-over');
     });
     
