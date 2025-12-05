@@ -37,13 +37,22 @@ function shuffleArray(array) {
 // Text-to-speech function for pronunciation
 function speakGerman(text) {
     if ('speechSynthesis' in window) {
-        // Cancel any ongoing speech
-        window.speechSynthesis.cancel();
-        
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'de-DE'; // German language
-        utterance.rate = 0.9; // Slightly slower for learning
-        window.speechSynthesis.speak(utterance);
+        try {
+            // Cancel any ongoing speech
+            window.speechSynthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'de-DE'; // German language
+            utterance.rate = 0.9; // Slightly slower for learning
+            
+            utterance.onerror = (event) => {
+                console.warn('Speech synthesis error:', event.error);
+            };
+            
+            window.speechSynthesis.speak(utterance);
+        } catch (error) {
+            console.warn('Speech synthesis not available:', error);
+        }
     }
 }
 
@@ -316,7 +325,7 @@ function checkCompletion() {
         stopTimer();
         const completionTime = getElapsedTime();
         const wordsMatched = Object.keys(matches).length;
-        const wpm = Math.round((wordsMatched / completionTime) * 60);
+        const wpm = completionTime > 0 ? Math.round((wordsMatched / completionTime) * 60) : 0;
         
         // Update statistics
         stats.gamesPlayed++;

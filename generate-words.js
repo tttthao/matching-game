@@ -41,7 +41,23 @@ function parseCSV(filePath) {
     const dataLines = hasHeader ? lines.slice(1) : lines;
     
     const words = dataLines.map(line => {
-        const parts = line.split(',').map(p => p.trim().replace(/^["']|["']$/g, ''));
+        // Simple CSV parsing - handles quoted fields with commas
+        const parts = [];
+        let current = '';
+        let inQuotes = false;
+        
+        for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+            if (char === '"' || char === "'") {
+                inQuotes = !inQuotes;
+            } else if (char === ',' && !inQuotes) {
+                parts.push(current.trim().replace(/^["']|["']$/g, ''));
+                current = '';
+            } else {
+                current += char;
+            }
+        }
+        parts.push(current.trim().replace(/^["']|["']$/g, ''));
         
         if (parts.length >= 2) {
             return {
