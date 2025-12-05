@@ -131,44 +131,46 @@ function handleDrop(e) {
         return false;
     }
     
-    if (draggedElement) {
-        const germanWord = draggedElement.dataset.german;
-        const correctEnglish = draggedElement.dataset.english;
-        const dropEnglish = dropZone.dataset.english;
+    if (!draggedElement) {
+        return false;
+    }
+    
+    const germanWord = draggedElement.dataset.german;
+    const correctEnglish = draggedElement.dataset.english;
+    const dropEnglish = dropZone.dataset.english;
+    
+    // Check if match is correct
+    const isCorrect = correctEnglish === dropEnglish;
+    
+    if (isCorrect) {
+        // Correct match
+        dropZone.classList.add('correct', 'filled');
+        dropZone.textContent = `${germanWord} → ${dropEnglish}`;
         
-        // Check if match is correct
-        const isCorrect = correctEnglish === dropEnglish;
+        // Remove the dragged element
+        draggedElement.remove();
         
-        if (isCorrect) {
-            // Correct match
-            dropZone.classList.add('correct', 'filled');
-            dropZone.textContent = `${germanWord} → ${dropEnglish}`;
-            
-            // Remove the dragged element
-            draggedElement.remove();
-            
-            // Update score
-            score += 10;
-            scoreElement.textContent = score;
-            
-            // Store match
-            matches[germanWord] = dropEnglish;
-            
-            // Check if all matches are complete
-            checkCompletion();
-        } else {
-            // Incorrect match
-            dropZone.classList.add('incorrect');
-            
-            // Remove incorrect class after animation
-            setTimeout(() => {
-                dropZone.classList.remove('incorrect');
-            }, 500);
-            
-            // Deduct score
-            score = Math.max(0, score - 5);
-            scoreElement.textContent = score;
-        }
+        // Update score
+        score += 10;
+        scoreElement.textContent = score;
+        
+        // Store match
+        matches[germanWord] = dropEnglish;
+        
+        // Check if all matches are complete
+        checkCompletion();
+    } else {
+        // Incorrect match
+        dropZone.classList.add('incorrect');
+        
+        // Remove incorrect class after animation
+        setTimeout(() => {
+            dropZone.classList.remove('incorrect');
+        }, 500);
+        
+        // Deduct score
+        score = Math.max(0, score - 5);
+        scoreElement.textContent = score;
     }
     
     return false;
