@@ -2,6 +2,15 @@
 let words = [];
 let score = 0;
 let matches = {};
+let startTime = null;
+let timerInterval = null;
+
+// Statistics
+let stats = {
+    gamesPlayed: 0,
+    highScore: 0,
+    bestTime: null
+};
 
 // DOM elements
 const germanWordsContainer = document.getElementById('german-words');
@@ -9,6 +18,11 @@ const englishWordsContainer = document.getElementById('english-words');
 const scoreElement = document.getElementById('score');
 const messageElement = document.getElementById('message');
 const resetButton = document.getElementById('reset-btn');
+const timerElement = document.getElementById('timer');
+const gamesPlayedElement = document.getElementById('games-played');
+const highScoreElement = document.getElementById('high-score');
+const bestTimeElement = document.getElementById('best-time');
+const themeToggle = document.getElementById('theme-toggle');
 
 // Shuffle array helper
 function shuffleArray(array) {
@@ -18,6 +32,95 @@ function shuffleArray(array) {
         [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
     return shuffled;
+}
+
+// Text-to-speech function for pronunciation
+function speakGerman(text) {
+    if ('speechSynthesis' in window) {
+        // Cancel any ongoing speech
+        window.speechSynthesis.cancel();
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'de-DE'; // German language
+        utterance.rate = 0.9; // Slightly slower for learning
+        window.speechSynthesis.speak(utterance);
+    }
+}
+
+// Timer functions
+function startTimer() {
+    startTime = Date.now();
+    timerInterval = setInterval(updateTimer, 1000);
+}
+
+function stopTimer() {
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+}
+
+function updateTimer() {
+    if (startTime) {
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        const minutes = Math.floor(elapsed / 60);
+        const seconds = elapsed % 60;
+        timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }
+}
+
+function getElapsedTime() {
+    if (startTime) {
+        return Math.floor((Date.now() - startTime) / 1000);
+    }
+    return 0;
+}
+
+function formatTime(seconds) {
+    if (!seconds) return '--';
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs.toString().padStart(2, '0')}`;
+}
+
+// localStorage functions
+function loadStats() {
+    const saved = localStorage.getItem('matchingGameStats');
+    if (saved) {
+        stats = JSON.parse(saved);
+    }
+    updateStatsDisplay();
+}
+
+function saveStats() {
+    localStorage.setItem('matchingGameStats', JSON.stringify(stats));
+    updateStatsDisplay();
+}
+
+function updateStatsDisplay() {
+    gamesPlayedElement.textContent = stats.gamesPlayed;
+    highScoreElement.textContent = stats.highScore;
+    bestTimeElement.textContent = formatTime(stats.bestTime);
+}
+
+// Theme functions
+function loadTheme() {
+    const savedTheme = localStorage.getItem('matchingGameTheme') || 'light';
+    document.body.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+}
+
+function toggleTheme() {
+    const currentTheme = document.body.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    document.body.setAttribute('data-theme', newTheme);
+    localStorage.setItem('matchingGameTheme', newTheme);
+    updateThemeIcon(newTheme);
+}
+
+function updateThemeIcon(theme) {
+    const icon = themeToggle.querySelector('.theme-icon');
+    icon.textContent = theme === 'light' ? '🌙' : '☀️';
 }
 
 // Load words from JSON
@@ -41,6 +144,11 @@ function initGame() {
     messageElement.textContent = '';
     messageElement.style.color = '#27ae60';
     
+    // Reset timer
+    stopTimer();
+    timerElement.textContent = '0:00';
+    startTime = null;
+    
     germanWordsContainer.innerHTML = '';
     englishWordsContainer.innerHTML = '';
     
@@ -54,7 +162,26 @@ function initGame() {
     shuffledGerman.forEach((word, index) => {
         const wordItem = document.createElement('div');
         wordItem.className = 'word-item';
-        wordItem.textContent = word.german;
+        
+        // Create text span
+        const textSpan = document.createElement('span');
+        textSpan.textContent = word.german;
+        textSpan.className = 'word-text';
+        
+        // Create audio button
+        const audioBtn = document.createElement('button');
+        audioBtn.className = 'audio-btn';
+        audioBtn.innerHTML = '🔊';
+        audioBtn.setAttribute('aria-label', 'Pronounce word');
+        audioBtn.onclick = (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            speakGerman(word.german);
+        };
+        
+        wordItem.appendChild(textSpan);
+        wordItem.appendChild(audioBtn);
+        
         wordItem.draggable = true;
         wordItem.dataset.german = word.german;
         wordItem.dataset.english = word.english;
@@ -135,6 +262,11 @@ function handleDrop(e) {
         return false;
     }
     
+    // Start timer on first move
+    if (!startTime) {
+        startTimer();
+    }
+    
     const germanWord = draggedElement.dataset.german;
     const correctEnglish = draggedElement.dataset.english;
     const dropEnglish = dropZone.dataset.english;
@@ -181,7 +313,22 @@ function checkCompletion() {
     const remainingWords = germanWordsContainer.querySelectorAll('.word-item').length;
     
     if (remainingWords === 0) {
-        messageElement.textContent = '🎉 Hoàn thành! Congratulations!';
+        stopTimer();
+        const completionTime = getElapsedTime();
+        const wordsMatched = Object.keys(matches).length;
+        const wpm = Math.round((wordsMatched / completionTime) * 60);
+        
+        // Update statistics
+        stats.gamesPlayed++;
+        if (score > stats.highScore) {
+            stats.highScore = score;
+        }
+        if (!stats.bestTime || completionTime < stats.bestTime) {
+            stats.bestTime = completionTime;
+        }
+        saveStats();
+        
+        messageElement.textContent = `🎉 Complete! Time: ${formatTime(completionTime)} | Speed: ${wpm} WPM`;
         messageElement.style.color = '#27ae60';
     }
 }
@@ -189,5 +336,10 @@ function checkCompletion() {
 // Reset game
 resetButton.addEventListener('click', initGame);
 
+// Theme toggle
+themeToggle.addEventListener('click', toggleTheme);
+
 // Start game on page load
+loadTheme();
+loadStats();
 loadWords();
