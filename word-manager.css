@@ -226,6 +226,11 @@ body[data-theme="dark"] .source-badge.user {
     color: #721c24;
 }
 
+.status-badge.remembered {
+    background: #d4edda;
+    color: #155724;
+}
+
 body[data-theme="dark"] .status-badge.edited {
     background: #4a3a00;
     color: #ffc107;
@@ -234,6 +239,11 @@ body[data-theme="dark"] .status-badge.edited {
 body[data-theme="dark"] .status-badge.deleted {
     background: #4d1a1a;
     color: #f8d7da;
+}
+
+body[data-theme="dark"] .status-badge.remembered {
+    background: #1a4d1a;
+    color: #4caf50;
 }
 
 .action-btn {
@@ -261,6 +271,14 @@ body[data-theme="dark"] .status-badge.deleted {
 
 .action-btn.restore {
     color: #4caf50;
+}
+
+.action-btn.remember {
+    color: #4caf50;
+}
+
+.action-btn.unremember {
+    color: #ff9800;
 }
 
 .empty-state {

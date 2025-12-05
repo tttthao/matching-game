@@ -182,21 +182,30 @@ function saveWordHistory(currentRoundWords) {
 }
 
 function selectWordsForRound(allWords, previousRoundWords) {
+    // Filter out remembered words first
+    const notRememberedWords = allWords.filter(word => {
+        // Check if word is remembered
+        return !wordManager.rememberedWords.has(word.german);
+    });
+    
+    // If we have no unremembered words, use all words (remembered + unremembered)
+    const wordsToUse = notRememberedWords.length > 0 ? notRememberedWords : allWords;
+    
     // If we have fewer words than needed, use all available words
-    if (allWords.length <= WORDS_PER_ROUND) {
-        return allWords;
+    if (wordsToUse.length <= WORDS_PER_ROUND) {
+        return wordsToUse;
     }
     
     // Filter out words from the immediate previous round only
     // Use Set for O(1) lookup performance
     const previousWordsSet = new Set(previousRoundWords);
-    const availableWords = allWords.filter(word => 
+    const availableWords = wordsToUse.filter(word => 
         !previousWordsSet.has(word.german)
     );
     
-    // If we don't have enough unused words, just select from all words
+    // If we don't have enough unused words, just select from all words (excluding remembered)
     if (availableWords.length < WORDS_PER_ROUND) {
-        const shuffled = shuffleArray(allWords);
+        const shuffled = shuffleArray(wordsToUse);
         return shuffled.slice(0, WORDS_PER_ROUND);
     }
     
@@ -608,8 +617,10 @@ function refreshWordTable() {
     const editedWords = allWords.filter(w => w.isEdited);
     const deletedWords = allWords.filter(w => w.isDeleted);
     const activeWords = allWords.filter(w => !w.isDeleted);
+    const rememberedWords = allWords.filter(w => w.remembered && !w.isDeleted);
     
     document.getElementById('total-words-count').textContent = activeWords.length;
+    document.getElementById('remembered-words-count').textContent = rememberedWords.length;
     document.getElementById('repo-words-count').textContent = repoWords.filter(w => !w.isDeleted).length;
     document.getElementById('user-words-count').textContent = userWords.filter(w => !w.isDeleted).length;
     document.getElementById('edited-words-count').textContent = editedWords.filter(w => !w.isDeleted).length;
@@ -626,12 +637,19 @@ function refreshWordTable() {
     wordTableBody.innerHTML = wordsToShow.map(word => {
         const rowClass = word.isDeleted ? 'deleted' : '';
         const statusBadges = [];
+        if (word.remembered) statusBadges.push('<span class="status-badge remembered">Remembered</span>');
         if (word.isEdited) statusBadges.push('<span class="status-badge edited">Edited</span>');
         if (word.isDeleted) statusBadges.push('<span class="status-badge deleted">Deleted</span>');
+        
+        const rememberBtn = word.isDeleted ? '' : 
+            (word.remembered 
+                ? `<button class="action-btn unremember" onclick="unmarkWord('${escapeHtml(word.originalGerman)}')">❌ Unmark</button>`
+                : `<button class="action-btn remember" onclick="markWord('${escapeHtml(word.originalGerman)}')">✅ Mark</button>`);
         
         const actions = word.isDeleted
             ? `<button class="action-btn restore" onclick="restoreWord('${escapeHtml(word.originalGerman)}')">🔄 Restore</button>`
             : `
+                ${rememberBtn}
                 <button class="action-btn edit" onclick="editWord('${escapeHtml(word.originalGerman)}')">✏️ Edit</button>
                 <button class="action-btn delete" onclick="deleteWord('${escapeHtml(word.originalGerman)}')">🗑️ Delete</button>
               `;
@@ -711,6 +729,30 @@ function restoreWord(german) {
     refreshWordTable();
     
     // Reload game words
+    words = wordManager.getMergedWords();
+    if (words.length > 0) {
+        initGame();
+    }
+}
+
+// Mark word as remembered
+function markWord(german) {
+    wordManager.markAsRemembered(german);
+    refreshWordTable();
+    
+    // Reload game words to exclude remembered words
+    words = wordManager.getMergedWords();
+    if (words.length > 0) {
+        initGame();
+    }
+}
+
+// Unmark word as remembered
+function unmarkWord(german) {
+    wordManager.unmarkAsRemembered(german);
+    refreshWordTable();
+    
+    // Reload game words to include unremembered words
     words = wordManager.getMergedWords();
     if (words.length > 0) {
         initGame();

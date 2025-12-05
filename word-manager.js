@@ -10,6 +10,7 @@ class WordManager {
         this.userWords = []; // User-added words
         this.editedWords = {}; // Edited words: key = original german, value = {german, english}
         this.deletedWords = new Set(); // Soft-deleted words (german text)
+        this.rememberedWords = new Set(); // Remembered words (german text)
         this.storageKey = 'matchingGameUserData';
         this.loadUserData();
     }
@@ -23,6 +24,7 @@ class WordManager {
                 this.userWords = parsed.userWords || [];
                 this.editedWords = parsed.editedWords || {};
                 this.deletedWords = new Set(parsed.deletedWords || []);
+                this.rememberedWords = new Set(parsed.rememberedWords || []);
             }
         } catch (error) {
             console.error('Error loading user data:', error);
@@ -35,7 +37,8 @@ class WordManager {
             const data = {
                 userWords: this.userWords,
                 editedWords: this.editedWords,
-                deletedWords: Array.from(this.deletedWords)
+                deletedWords: Array.from(this.deletedWords),
+                rememberedWords: Array.from(this.rememberedWords)
             };
             localStorage.setItem(this.storageKey, JSON.stringify(data));
         } catch (error) {
@@ -108,6 +111,7 @@ class WordManager {
             const key = word.german;
             const isDeleted = this.deletedWords.has(key);
             const isEdited = !!this.editedWords[key];
+            const isRemembered = this.rememberedWords.has(key);
             
             words.push({
                 originalGerman: word.german,
@@ -117,7 +121,8 @@ class WordManager {
                 german_example: isEdited ? this.editedWords[key].german_example : word.german_example,
                 source: 'repo',
                 isDeleted,
-                isEdited
+                isEdited,
+                remembered: isRemembered
             });
             seen.add(key);
         });
@@ -129,6 +134,7 @@ class WordManager {
             
             const isDeleted = this.deletedWords.has(key);
             const isEdited = !!this.editedWords[key];
+            const isRemembered = this.rememberedWords.has(key);
             
             words.push({
                 originalGerman: word.german,
@@ -138,7 +144,8 @@ class WordManager {
                 german_example: isEdited ? this.editedWords[key].german_example : word.german_example,
                 source: 'user',
                 isDeleted,
-                isEdited
+                isEdited,
+                remembered: isRemembered
             });
         });
 
@@ -194,6 +201,20 @@ class WordManager {
         return true;
     }
 
+    // Mark a word as remembered
+    markAsRemembered(german) {
+        this.rememberedWords.add(german);
+        this.saveUserData();
+        return true;
+    }
+
+    // Unmark a word as remembered
+    unmarkAsRemembered(german) {
+        this.rememberedWords.delete(german);
+        this.saveUserData();
+        return true;
+    }
+
     // Import words from JSON (only add new ones)
     importWords(words) {
         let added = 0;
@@ -220,6 +241,13 @@ class WordManager {
             } else {
                 skipped++;
             }
+            
+            // Import remembered status if present
+            if (word.remembered === true) {
+                this.rememberedWords.add(word.german);
+            } else if (word.remembered === false) {
+                this.rememberedWords.delete(word.german);
+            }
         });
 
         this.saveUserData();
@@ -229,7 +257,12 @@ class WordManager {
     // Export merged words as JSON
     exportWords() {
         const merged = this.getMergedWords();
-        return JSON.stringify(merged, null, 2);
+        // Add remembered status to exported words
+        const mergedWithRemembered = merged.map(word => ({
+            ...word,
+            remembered: this.rememberedWords.has(word.german)
+        }));
+        return JSON.stringify(mergedWithRemembered, null, 2);
     }
 
     // Search words
@@ -257,6 +290,10 @@ class WordManager {
             return allWords.filter(w => w.isDeleted);
         } else if (filter === 'active') {
             return allWords.filter(w => !w.isDeleted);
+        } else if (filter === 'remembered') {
+            return allWords.filter(w => w.remembered && !w.isDeleted);
+        } else if (filter === 'not-remembered') {
+            return allWords.filter(w => !w.remembered && !w.isDeleted);
         }
         
         return allWords;
