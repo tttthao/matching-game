@@ -71,6 +71,10 @@
                     <span class="stat-label">Total Words</span>
                 </div>
                 <div class="stat">
+                    <span class="stat-value" id="remembered-words-count">0</span>
+                    <span class="stat-label">Remembered</span>
+                </div>
+                <div class="stat">
                     <span class="stat-value" id="repo-words-count">0</span>
                     <span class="stat-label">Repository</span>
                 </div>
@@ -93,6 +97,8 @@
                 <select id="filter-words" class="filter-select">
                     <option value="active">Active Words</option>
                     <option value="all">All Words</option>
+                    <option value="not-remembered">Not Remembered</option>
+                    <option value="remembered">Remembered</option>
                     <option value="repo">Repository Only</option>
                     <option value="user">User Added</option>
                     <option value="edited">Edited</option>
