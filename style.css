@@ -16,6 +16,10 @@
     --score-bg: #f5f5f5;
     --button-bg: #667eea;
     --button-hover: #764ba2;
+    --correct-bg: #d4edda;
+    --correct-border: #28a745;
+    --incorrect-bg: #f8d7da;
+    --incorrect-border: #dc3545;
 }
 
 body[data-theme="dark"] {
@@ -30,6 +34,10 @@ body[data-theme="dark"] {
     --score-bg: #1a2f4d;
     --button-bg: #e94560;
     --button-hover: #c73550;
+    --correct-bg: #1a4d2e;
+    --correct-border: #2d7a4f;
+    --incorrect-bg: #4d1a1a;
+    --incorrect-border: #a74444;
 }
 
 body {
@@ -246,14 +254,14 @@ h2 {
 }
 
 .drop-zone.correct {
-    background: #d4edda;
-    border-color: #28a745;
+    background: var(--correct-bg);
+    border-color: var(--correct-border);
     animation: correctPulse 0.5s ease;
 }
 
 .drop-zone.incorrect {
-    background: #f8d7da;
-    border-color: #dc3545;
+    background: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
     animation: incorrectShake 0.5s ease;
 }
 
