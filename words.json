@@ -1,12 +1,1047 @@
 [
-  { "german": "der Hund", "english": "the dog" },
-  { "german": "die Katze", "english": "the cat" },
-  { "german": "das Haus", "english": "the house" },
-  { "german": "der Baum", "english": "the tree" },
-  { "german": "das Auto", "english": "the car" },
-  { "german": "die Blume", "english": "the flower" },
-  { "german": "der Tisch", "english": "the table" },
-  { "german": "das Buch", "english": "the book" },
-  { "german": "die Tür", "english": "the door" },
-  { "german": "das Fenster", "english": "the window" }
+  {
+    "german": "Orangen",
+    "english": "oranges",
+    "german_example": "Ich mag Orangen."
+  },
+  {
+    "german": "Marktplatz",
+    "english": "marketplace, market",
+    "german_example": "Ich bin am Marktplatz."
+  },
+  {
+    "german": "drei",
+    "english": "three",
+    "german_example": "Wir sind drei."
+  },
+  {
+    "german": "eins",
+    "english": "one",
+    "german_example": "Wir sind eins."
+  },
+  {
+    "german": "zwei",
+    "english": "two",
+    "german_example": "Wir sind zwei."
+  },
+  {
+    "german": "Anwalt",
+    "english": "lawyer, barrister, solicitor",
+    "german_example": "Der/Die Anwalt arbeitet hier."
+  },
+  {
+    "german": "Russland",
+    "english": "Russia",
+    "german_example": "Ich komme aus Russland."
+  },
+  {
+    "german": "Anwältin",
+    "english": "lawyer, a lawyer",
+    "german_example": "Der/Die Anwältin arbeitet hier."
+  },
+  {
+    "german": "Schweden",
+    "english": "Sweden",
+    "german_example": "Ich komme aus Schweden."
+  },
+  {
+    "german": "Künstler",
+    "english": "an artist, artists', performer",
+    "german_example": "Das Künstler ist neu."
+  },
+  {
+    "german": "lebst",
+    "english": "live, living",
+    "german_example": "Du lebst."
+  },
+  {
+    "german": "lebe",
+    "english": "live, am living",
+    "german_example": "Ich lebe."
+  },
+  {
+    "german": "leben",
+    "english": "lived, living, are living",
+    "german_example": "Beispiel: leben."
+  },
+  {
+    "german": "Polizist",
+    "english": "police officer, policeman, a police officer",
+    "german_example": "Der/Die Polizist arbeitet hier."
+  },
+  {
+    "german": "Schüler",
+    "english": "students, pupil, student",
+    "german_example": "Der/Die Schüler arbeitet hier."
+  },
+  {
+    "german": "Deutsch",
+    "english": "German",
+    "german_example": "Das Deutsch ist neu."
+  },
+  {
+    "german": "spreche",
+    "english": "am talking, speak, pronounce",
+    "german_example": "Ich spreche."
+  },
+  {
+    "german": "sprechen",
+    "english": "speak, are speaking",
+    "german_example": "Beispiel: sprechen."
+  },
+  {
+    "german": "Englisch",
+    "english": "English",
+    "german_example": "Das Englisch ist neu."
+  },
+  {
+    "german": "kein",
+    "english": "any, no, not an",
+    "german_example": "Ich habe kein Geld."
+  },
+  {
+    "german": "freut mich",
+    "english": "nice to meet you, nice",
+    "german_example": "Freut mich!"
+  },
+  {
+    "german": "wie",
+    "english": "as, such, like",
+    "german_example": "Wie heißt du?"
+  },
+  {
+    "german": "heiße",
+    "english": "hot, am called",
+    "german_example": "Ich heiße."
+  },
+  {
+    "german": "heißen",
+    "english": "hot, name, go",
+    "german_example": "Beispiel: heißen."
+  },
+  {
+    "german": "kommen",
+    "english": "arrives, comes on, do come",
+    "german_example": "Beispiel: kommen."
+  },
+  {
+    "german": "sind",
+    "english": "feel, have, are",
+    "german_example": "Wir sind hier."
+  },
+  {
+    "german": "Herr",
+    "english": "Mr., gentleman",
+    "german_example": "Der/Die Herr arbeitet hier."
+  },
+  {
+    "german": "Sie",
+    "english": "They, It, your",
+    "german_example": "Sie sind freundlich."
+  },
+  {
+    "german": "Kanzlerin",
+    "english": "chancellor, the chancellor, a chancellor",
+    "german_example": "Der/Die Kanzlerin arbeitet hier."
+  },
+  {
+    "german": "U-Bahnstation",
+    "english": "subway station",
+    "german_example": "Ich bin am U-Bahnstation."
+  },
+  {
+    "german": "Geldautomat",
+    "english": "ATM, cash dispenser, cashpoint",
+    "german_example": "Ich bin am Geldautomat."
+  },
+  {
+    "german": "neu",
+    "english": "new",
+    "german_example": "Das ist neu."
+  },
+  {
+    "german": "weit weg",
+    "english": "far away, far",
+    "german_example": "Das Hotel ist weit weg."
+  },
+  {
+    "german": "je",
+    "english": "for each, per, once",
+    "german_example": "Ich je."
+  },
+  {
+    "german": "Universität",
+    "english": "university, uni, college",
+    "german_example": "Ich bin am Universität."
+  },
+  {
+    "german": "Kino",
+    "english": "movie theater, cinema, movie theatre",
+    "german_example": "Ich bin am Kino."
+  },
+  {
+    "german": "rechts",
+    "english": "on the right, right, the right",
+    "german_example": "Das Kino ist rechts."
+  },
+  {
+    "german": "links",
+    "english": "on the left, left, to the left",
+    "german_example": "Die Bäckerei ist links."
+  },
+  {
+    "german": "Bäckerei",
+    "english": "bakery, baker's",
+    "german_example": "Ich bin am Bäckerei."
+  },
+  {
+    "german": "Supermarkt",
+    "english": "supermarket, grocery store",
+    "german_example": "Ich bin am Supermarkt."
+  },
+  {
+    "german": "ha",
+    "english": "ha",
+    "german_example": "Beispiel: ha."
+  },
+  {
+    "german": "Museum",
+    "english": "museum",
+    "german_example": "Ich bin am Museum."
+  },
+  {
+    "german": "Hotel",
+    "english": "hotel",
+    "german_example": "Ich bin am Hotel."
+  },
+  {
+    "german": "billig",
+    "english": "cheap, inexpensive",
+    "german_example": "Das ist billig."
+  },
+  {
+    "german": "elegant",
+    "english": "elegant",
+    "german_example": "Er elegant."
+  },
+  {
+    "german": "Café",
+    "english": "coffee shop, cafe, coffeehouse",
+    "german_example": "Das Café ist neu."
+  },
+  {
+    "german": "alt",
+    "english": "old",
+    "german_example": "Er alt."
+  },
+  {
+    "german": "in der Nähe",
+    "english": "close, nearby, near",
+    "german_example": "Das Café ist in der Nähe."
+  },
+  {
+    "german": "Kirche",
+    "english": "church, kirk",
+    "german_example": "Ich bin am Kirche."
+  },
+  {
+    "german": "Apotheke",
+    "english": "pharmacy, drugstore, chemist",
+    "german_example": "Ich bin am Apotheke."
+  },
+  {
+    "german": "Bibliothek",
+    "english": "library",
+    "german_example": "Ich bin am Bibliothek."
+  },
+  {
+    "german": "Bahnhof",
+    "english": "train station, railway station, rail station",
+    "german_example": "Ich bin am Bahnhof."
+  },
+  {
+    "german": "Markt",
+    "english": "market, marketplace",
+    "german_example": "Ich bin am Markt."
+  },
+  {
+    "german": "da drüben",
+    "english": "over there",
+    "german_example": "Das Museum ist da drüben."
+  },
+  {
+    "german": "Park",
+    "english": "park",
+    "german_example": "Ich bin am Park."
+  },
+  {
+    "german": "Taxistand",
+    "english": "taxi stand",
+    "german_example": "Ich bin am Taxistand."
+  },
+  {
+    "german": "Klavier",
+    "english": "piano",
+    "german_example": "Das Klavier ist neu."
+  },
+  {
+    "german": "spiele",
+    "english": "am playing, play, playing",
+    "german_example": "Ich spiele."
+  },
+  {
+    "german": "spielst",
+    "english": "are playing, playing, play",
+    "german_example": "Du spielst."
+  },
+  {
+    "german": "Schach",
+    "english": "chess",
+    "german_example": "Das Schach ist neu."
+  },
+  {
+    "german": "spielt",
+    "english": "is, are playing, is playing",
+    "german_example": "Er spielt."
+  },
+  {
+    "german": "oft",
+    "english": "often",
+    "german_example": "Er oft."
+  },
+  {
+    "german": "schwimmt",
+    "english": "swim, is swimming, are floating",
+    "german_example": "Er schwimmt."
+  },
+  {
+    "german": "malt",
+    "english": "is drawing, paints, draws",
+    "german_example": "Er malt."
+  },
+  {
+    "german": "kocht",
+    "english": "make, cooks, is cooking",
+    "german_example": "Er kocht."
+  },
+  {
+    "german": "immer",
+    "english": "always",
+    "german_example": "Ich komme immer."
+  },
+  {
+    "german": "schwimmst",
+    "english": "swim, are floating, float",
+    "german_example": "Du schwimmst."
+  },
+  {
+    "german": "kochst",
+    "english": "are boiling, make, boil",
+    "german_example": "Du kochst."
+  },
+  {
+    "german": "malst",
+    "english": "are painting, paint",
+    "german_example": "Du malst."
+  },
+  {
+    "german": "eh",
+    "english": "in any case, hey, anyway",
+    "german_example": "Eh, ist egal."
+  },
+  {
+    "german": "male",
+    "english": "paint, am painting, draw",
+    "german_example": "Ich male."
+  },
+  {
+    "german": "nie",
+    "english": "never",
+    "german_example": "Ich nie."
+  },
+  {
+    "german": "schwimme",
+    "english": "swim, am swimming, swimming",
+    "german_example": "Ich schwimme."
+  },
+  {
+    "german": "manchmal",
+    "english": "sometimes, at times",
+    "german_example": "Ich komme manchmal."
+  },
+  {
+    "german": "koche",
+    "english": "am making, make, will cook",
+    "german_example": "Ich koche."
+  },
+  {
+    "german": "acht",
+    "english": "eight",
+    "german_example": "Er acht."
+  },
+  {
+    "german": "Lehrerin",
+    "english": "teacher, a teacher",
+    "german_example": "Der/Die Lehrerin arbeitet hier."
+  },
+  {
+    "german": "Arbeit",
+    "english": "work, piece of work, job",
+    "german_example": "Das Arbeit ist neu."
+  },
+  {
+    "german": "Lehrer",
+    "english": "teacher, instructor, schoolteacher",
+    "german_example": "Der/Die Lehrer arbeitet hier."
+  },
+  {
+    "german": "interessant",
+    "english": "interesting",
+    "german_example": "Er interessant."
+  },
+  {
+    "german": "aber",
+    "english": "but, however",
+    "german_example": "Beispiel: aber."
+  },
+  {
+    "german": "stressig",
+    "english": "stressful",
+    "german_example": "Das ist stressig."
+  },
+  {
+    "german": "Arzt",
+    "english": "doctor, physician",
+    "german_example": "Der/Die Arzt arbeitet hier."
+  },
+  {
+    "german": "Studentin",
+    "english": "a student, college student, student",
+    "german_example": "Der/Die Studentin arbeitet hier."
+  },
+  {
+    "german": "Ärztin",
+    "english": "doctor, a doctor",
+    "german_example": "Der/Die Ärztin arbeitet hier."
+  },
+  {
+    "german": "Student",
+    "english": "college student, university student, student",
+    "german_example": "Der/Die Student arbeitet hier."
+  },
+  {
+    "german": "Freundin",
+    "english": "girlfriend, friend, friend's",
+    "german_example": "Der/Die Freundin arbeitet hier."
+  },
+  {
+    "german": "deine",
+    "english": "your, yours",
+    "german_example": "Ich deine."
+  },
+  {
+    "german": "Beruf",
+    "english": "profession, job, occupation",
+    "german_example": "Das Beruf ist neu."
+  },
+  {
+    "german": "dein",
+    "english": "your",
+    "german_example": "Beispiel: dein."
+  },
+  {
+    "german": "was",
+    "english": "what",
+    "german_example": "Was ist das?"
+  },
+  {
+    "german": "Professorin",
+    "english": "professor, a professor",
+    "german_example": "Der/Die Professorin arbeitet hier."
+  },
+  {
+    "german": "Professor",
+    "english": "professor, a professor",
+    "german_example": "Der/Die Professor arbeitet hier."
+  },
+  {
+    "german": "au",
+    "english": "ow, oh, ouch",
+    "german_example": "Beispiel: au."
+  },
+  {
+    "german": "Kellnerin",
+    "english": "waitress, server",
+    "german_example": "Der/Die Kellnerin arbeitet hier."
+  },
+  {
+    "german": "sie",
+    "english": "she",
+    "german_example": "Ich sie."
+  },
+  {
+    "german": "Schauspieler",
+    "english": "actor",
+    "german_example": "Der/Die Schauspieler arbeitet hier."
+  },
+  {
+    "german": "Schauspielerin",
+    "english": "actress, actor",
+    "german_example": "Der/Die Schauspielerin arbeitet hier."
+  },
+  {
+    "german": "laut",
+    "english": "loud, noisy, loudly",
+    "german_example": "Er laut."
+  },
+  {
+    "german": "aufregend",
+    "english": "exciting, thrilling",
+    "german_example": "Das ist aufregend."
+  },
+  {
+    "german": "teuer",
+    "english": "expensive, costly, dear",
+    "german_example": "Das ist teuer."
+  },
+  {
+    "german": "cool",
+    "english": "cool",
+    "german_example": "Beispiel: cool."
+  },
+  {
+    "german": "auch",
+    "english": "also, as well, too",
+    "german_example": "Ich komme auch."
+  },
+  {
+    "german": "Frankreich",
+    "english": "France",
+    "german_example": "Ich komme aus Frankreich."
+  },
+  {
+    "german": "aus",
+    "english": "made of, out, off",
+    "german_example": "Ich komme aus Berlin."
+  },
+  {
+    "german": "komme",
+    "english": "come, will come, am coming",
+    "german_example": "Ich komme."
+  },
+  {
+    "german": "München",
+    "english": "Munich",
+    "german_example": "Ich komme aus München."
+  },
+  {
+    "german": "Stadt",
+    "english": "city, town",
+    "german_example": "Das Stadt ist neu."
+  },
+  {
+    "german": "Wien",
+    "english": "Vienna",
+    "german_example": "Ich komme aus Wien."
+  },
+  {
+    "german": "Österreich",
+    "english": "Austria",
+    "german_example": "Ich komme aus Österreich."
+  },
+  {
+    "german": "woher",
+    "english": "where, from, where from",
+    "german_example": "Woher kommst du?"
+  },
+  {
+    "german": "kommst",
+    "english": "come, are coming, are",
+    "german_example": "Du kommst."
+  },
+  {
+    "german": "Amerika",
+    "english": "America",
+    "german_example": "Ich komme aus Amerika."
+  },
+  {
+    "german": "in",
+    "english": "in, with, inside",
+    "german_example": "Ich bin in der Stadt."
+  },
+  {
+    "german": "Deutschland",
+    "english": "Germany",
+    "german_example": "Ich komme aus Deutschland."
+  },
+  {
+    "german": "klein",
+    "english": "small",
+    "german_example": "Das ist klein."
+  },
+  {
+    "german": "Kanada",
+    "english": "Canada",
+    "german_example": "Ich komme aus Kanada."
+  },
+  {
+    "german": "wunderbar",
+    "english": "wonderful, splendid, excellent",
+    "german_example": "Das ist wunderbar."
+  },
+  {
+    "german": "Schnitzel",
+    "english": "schnitzel, schnitzels",
+    "german_example": "Ich mag Schnitzel."
+  },
+  {
+    "german": "zu",
+    "english": "with, for, too",
+    "german_example": "Ich gehe zu dir."
+  },
+  {
+    "german": "Rechnung",
+    "english": "check",
+    "german_example": "Das Rechnung ist neu."
+  },
+  {
+    "german": "Essen",
+    "english": "food",
+    "german_example": "Ich mag Essen."
+  },
+  {
+    "german": "Wurst",
+    "english": "sausage",
+    "german_example": "Ich mag Wurst."
+  },
+  {
+    "german": "Restaurant",
+    "english": "restaurant",
+    "german_example": "Wir gehen ins Restaurant."
+  },
+  {
+    "german": "Salz",
+    "english": "salt",
+    "german_example": "Ich mag Salz."
+  },
+  {
+    "german": "Entschuldigung",
+    "english": "sorry, excuse me, apologies",
+    "german_example": "Entschuldigung!"
+  },
+  {
+    "german": "Kellner",
+    "english": "waiter",
+    "german_example": "Der/Die Kellner arbeitet hier."
+  },
+  {
+    "german": "Speisekarte",
+    "english": "menu",
+    "german_example": "Das Speisekarte ist neu."
+  },
+  {
+    "german": "kalt",
+    "english": "cold",
+    "german_example": "Er kalt."
+  },
+  {
+    "german": "Mineralwasser",
+    "english": "mineral water",
+    "german_example": "Ich mag Mineralwasser."
+  },
+  {
+    "german": "das",
+    "english": "that, this, so",
+    "german_example": "Das ist gut."
+  },
+  {
+    "german": "Ei",
+    "english": "egg",
+    "german_example": "Ich mag Ei."
+  },
+  {
+    "german": "Sandwich",
+    "english": "sandwich",
+    "german_example": "Ich mag Sandwich."
+  },
+  {
+    "german": "hier",
+    "english": "here",
+    "german_example": "Beispiel: hier."
+  },
+  {
+    "german": "heiß",
+    "english": "hot",
+    "german_example": "Das ist heiß."
+  },
+  {
+    "german": "lecker",
+    "english": "delicious",
+    "german_example": "Das ist lecker."
+  },
+  {
+    "german": "Pizza",
+    "english": "pizza",
+    "german_example": "Ich mag Pizza."
+  },
+  {
+    "german": "mit",
+    "english": "with",
+    "german_example": "Er mit."
+  },
+  {
+    "german": "Salat",
+    "english": "salad",
+    "german_example": "Ich mag Salat."
+  },
+  {
+    "german": "Käse",
+    "english": "cheese",
+    "german_example": "Ich mag Käse."
+  },
+  {
+    "german": "bis später",
+    "english": "see you later",
+    "german_example": "Bis später!"
+  },
+  {
+    "german": "es tut mir leid",
+    "english": "I am sorry",
+    "german_example": "Es tut mir leid."
+  },
+  {
+    "german": "natürlich",
+    "english": "of course",
+    "german_example": "Beispiel: natürlich."
+  },
+  {
+    "german": "ehe",
+    "english": "anyways, in any case, marriage",
+    "german_example": "Ich ehe."
+  },
+  {
+    "german": "bis bald",
+    "english": "see you soon",
+    "german_example": "Bis bald!"
+  },
+  {
+    "german": "prost",
+    "english": "cheers",
+    "german_example": "Prost!"
+  },
+  {
+    "german": "OK",
+    "english": "OK",
+    "german_example": "OK!"
+  },
+  {
+    "german": "auf Wiedersehen",
+    "english": "goodbye",
+    "german_example": "Auf Wiedersehen!"
+  },
+  {
+    "german": "er",
+    "english": "it's, he's, him",
+    "german_example": "Er ist hier."
+  },
+  {
+    "german": "es geht",
+    "english": "I'm all right",
+    "german_example": "Es geht mir gut."
+  },
+  {
+    "german": "sah",
+    "english": "saw, looked, watched",
+    "german_example": "Beispiel: sah."
+  },
+  {
+    "german": "gut",
+    "english": "good",
+    "german_example": "Er gut."
+  },
+  {
+    "german": "guten Tag",
+    "english": "hello",
+    "german_example": "Guten Tag!"
+  },
+  {
+    "german": "wie geht's",
+    "english": "how are you?",
+    "german_example": "Wie geht's?"
+  },
+  {
+    "german": "super",
+    "english": "super, great, fantastic",
+    "german_example": "Das ist super!"
+  },
+  {
+    "german": "Bär",
+    "english": "bear",
+    "german_example": "Der Bär ist im Park."
+  },
+  {
+    "german": "Eule",
+    "english": "owl",
+    "german_example": "Der Eule ist im Park."
+  },
+  {
+    "german": "oh",
+    "english": "oh, aw",
+    "german_example": "Oh nein!"
+  },
+  {
+    "german": "wo",
+    "english": "where",
+    "german_example": "Wo ist der Bahnhof?"
+  },
+  {
+    "german": "Maus",
+    "english": "mouse",
+    "german_example": "Der Maus ist im Park."
+  },
+  {
+    "german": "Katze",
+    "english": "cat",
+    "german_example": "Der Katze ist im Park."
+  },
+  {
+    "german": "Elefant",
+    "english": "elephant",
+    "german_example": "Der Elefant ist im Park."
+  },
+  {
+    "german": "schön",
+    "english": "beautiful",
+    "german_example": "Das ist schön."
+  },
+  {
+    "german": "jung",
+    "english": "young",
+    "german_example": "Das ist jung."
+  },
+  {
+    "german": "Hund",
+    "english": "dog",
+    "german_example": "Der Hund ist im Park."
+  },
+  {
+    "german": "Junge",
+    "english": "boy",
+    "german_example": "Das Junge ist neu."
+  },
+  {
+    "german": "der",
+    "english": "this, to the, of the",
+    "german_example": "Der Mann ist hier."
+  },
+  {
+    "german": "ie",
+    "english": "ie",
+    "german_example": "Ich ie."
+  },
+  {
+    "german": "die",
+    "english": "this, the, that",
+    "german_example": "Die Frau ist nett."
+  },
+  {
+    "german": "lag",
+    "english": "lied, was lying, lay",
+    "german_example": "Er lag im Bett."
+  },
+  {
+    "german": "nett",
+    "english": "nice",
+    "german_example": "Er nett."
+  },
+  {
+    "german": "klug",
+    "english": "smart",
+    "german_example": "Das ist klug."
+  },
+  {
+    "german": "groß",
+    "english": "tall",
+    "german_example": "Das ist groß."
+  },
+  {
+    "german": "sehr",
+    "english": "very",
+    "german_example": "Beispiel: sehr."
+  },
+  {
+    "german": "ist",
+    "english": "is, there is, 's",
+    "german_example": "Das ist gut."
+  },
+  {
+    "german": "Tochter",
+    "english": "daughter",
+    "german_example": "Der/Die Tochter arbeitet hier."
+  },
+  {
+    "german": "Sohn",
+    "english": "son",
+    "german_example": "Der/Die Sohn arbeitet hier."
+  },
+  {
+    "german": "du",
+    "english": "you",
+    "german_example": "Du bist nett."
+  },
+  {
+    "german": "bist",
+    "english": "are, have been, were",
+    "german_example": "Du bist."
+  },
+  {
+    "german": "Frau",
+    "english": "woman, wife, Ms.",
+    "german_example": "Der/Die Frau arbeitet hier."
+  },
+  {
+    "german": "ach",
+    "english": "oh",
+    "german_example": "Ach so."
+  },
+  {
+    "german": "Mann",
+    "english": "husband, man, guy",
+    "german_example": "Der/Die Mann arbeitet hier."
+  },
+  {
+    "german": "Bruder",
+    "english": "brother",
+    "german_example": "Der/Die Bruder arbeitet hier."
+  },
+  {
+    "german": "mein",
+    "english": "my",
+    "german_example": "Beispiel: mein."
+  },
+  {
+    "german": "meine",
+    "english": "mine, think, my",
+    "german_example": "Ich meine."
+  },
+  {
+    "german": "Schwester",
+    "english": "sister",
+    "german_example": "Der/Die Schwester arbeitet hier."
+  },
+  {
+    "german": "Mutter",
+    "english": "mother",
+    "german_example": "Der/Die Mutter arbeitet hier."
+  },
+  {
+    "german": "bin",
+    "english": "am, will be, feel",
+    "german_example": "Beispiel: bin."
+  },
+  {
+    "german": "eine",
+    "english": "an, a, one",
+    "german_example": "Ich habe eine Frage."
+  },
+  {
+    "german": "ein",
+    "english": "a, one, submit",
+    "german_example": "Ich habe ein Buch."
+  },
+  {
+    "german": "vier",
+    "english": "four",
+    "german_example": "Wir sind vier."
+  },
+  {
+    "german": "ich",
+    "english": "I",
+    "german_example": "Ich bin müde."
+  },
+  {
+    "german": "Vater",
+    "english": "father",
+    "german_example": "Der/Die Vater arbeitet hier."
+  },
+  {
+    "german": "ja",
+    "english": "yes",
+    "german_example": "Ja, gerne."
+  },
+  {
+    "german": "Bier",
+    "english": "beer",
+    "german_example": "Ich mag Bier."
+  },
+  {
+    "german": "oder",
+    "english": "or",
+    "german_example": "Tee oder Kaffee?"
+  },
+  {
+    "german": "tschüss",
+    "english": "bye",
+    "german_example": "Tschüss!"
+  },
+  {
+    "german": "nein",
+    "english": "no",
+    "german_example": "Nein, danke."
+  },
+  {
+    "german": "danke",
+    "english": "thank you",
+    "german_example": "Ich danke."
+  },
+  {
+    "german": "Wasser",
+    "english": "water",
+    "german_example": "Ich mag Wasser."
+  },
+  {
+    "german": "Brot",
+    "english": "bread",
+    "german_example": "Ich mag Brot."
+  },
+  {
+    "german": "Wein",
+    "english": "wine",
+    "german_example": "Ich mag Wein."
+  },
+  {
+    "german": "Tee",
+    "english": "tea",
+    "german_example": "Ich mag Tee."
+  },
+  {
+    "german": "hallo",
+    "english": "hello",
+    "german_example": "Hallo!"
+  },
+  {
+    "german": "Kaffee",
+    "english": "coffee",
+    "german_example": "Ich mag Kaffee."
+  },
+  {
+    "german": "bitte",
+    "english": "please",
+    "german_example": "Bitte schön."
+  },
+  {
+    "german": "Milch",
+    "english": "milk",
+    "german_example": "Ich mag Milch."
+  },
+  {
+    "german": "a",
+    "english": "A, ≅ M",
+    "german_example": "A ist ein Buchstabe."
+  },
+  {
+    "german": "und",
+    "english": "and",
+    "german_example": "Brot und Käse."
+  }
 ]
