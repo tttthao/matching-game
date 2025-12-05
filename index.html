@@ -5,14 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>German-English Matching Game</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="word-manager.css">
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>German-English Matching Game</h1>
-            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
-                <span class="theme-icon">🌙</span>
-            </button>
+            <div style="display: flex; gap: 10px;">
+                <button id="manage-words-btn" class="manage-words-btn" aria-label="Manage Words">
+                    📚 Manage Words
+                </button>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+                    <span class="theme-icon">🌙</span>
+                </button>
+            </div>
         </div>
         
         <div class="stats-panel">
@@ -51,6 +57,103 @@
         <button id="reset-btn" class="reset-button">New Game</button>
     </div>
     
+    <!-- Word Manager Modal -->
+    <div id="word-manager-modal" class="word-manager-modal">
+        <div class="word-manager-content">
+            <div class="word-manager-header">
+                <h2>📚 Word Management</h2>
+                <button class="close-modal" id="close-modal">&times;</button>
+            </div>
+            
+            <div class="stats-info">
+                <div class="stat">
+                    <span class="stat-value" id="total-words-count">0</span>
+                    <span class="stat-label">Total Words</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="repo-words-count">0</span>
+                    <span class="stat-label">Repository</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="user-words-count">0</span>
+                    <span class="stat-label">User Added</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="edited-words-count">0</span>
+                    <span class="stat-label">Edited</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="deleted-words-count">0</span>
+                    <span class="stat-label">Deleted</span>
+                </div>
+            </div>
+            
+            <div class="word-manager-toolbar">
+                <input type="text" id="search-words" class="search-box" placeholder="🔍 Search words...">
+                <select id="filter-words" class="filter-select">
+                    <option value="active">Active Words</option>
+                    <option value="all">All Words</option>
+                    <option value="repo">Repository Only</option>
+                    <option value="user">User Added</option>
+                    <option value="edited">Edited</option>
+                    <option value="deleted">Deleted</option>
+                </select>
+                <button id="add-word-btn" class="toolbar-btn">➕ Add Word</button>
+                <button id="import-words-btn" class="toolbar-btn secondary">📥 Import JSON</button>
+                <button id="export-words-btn" class="toolbar-btn secondary">📤 Export JSON</button>
+            </div>
+            
+            <div class="word-table-container">
+                <table class="word-table">
+                    <thead>
+                        <tr>
+                            <th>German</th>
+                            <th>English</th>
+                            <th>Source</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="word-table-body">
+                        <!-- Words will be populated here -->
+                    </tbody>
+                </table>
+                <div id="empty-state" class="empty-state" style="display: none;">
+                    <div class="empty-state-icon">📭</div>
+                    <p>No words found</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Word Form Modal -->
+    <div id="word-form-modal" class="word-form-modal">
+        <div class="word-form-content">
+            <h3 id="form-title">Add New Word</h3>
+            <div id="form-success" class="success-message" style="display: none;"></div>
+            <form id="word-form">
+                <div class="form-group">
+                    <label for="word-german">German Word</label>
+                    <input type="text" id="word-german" required>
+                    <div id="german-error" class="error-message" style="display: none;"></div>
+                </div>
+                <div class="form-group">
+                    <label for="word-english">English Translation</label>
+                    <input type="text" id="word-english" required>
+                    <div id="english-error" class="error-message" style="display: none;"></div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="form-btn secondary" id="cancel-form-btn">Cancel</button>
+                    <button type="submit" class="form-btn primary" id="submit-form-btn">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Hidden file input for import -->
+    <input type="file" id="import-file-input" accept=".json" style="display: none;">
+    
+    <script src="word-manager.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

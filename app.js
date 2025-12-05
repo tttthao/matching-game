@@ -5,6 +5,9 @@ let matches = {};
 let startTime = null;
 let timerInterval = null;
 
+// Word Manager instance
+let wordManager = null;
+
 // Statistics
 let stats = {
     gamesPlayed: 0,
@@ -136,7 +139,17 @@ function updateThemeIcon(theme) {
 async function loadWords() {
     try {
         const response = await fetch('words.json');
-        words = await response.json();
+        const repoWords = await response.json();
+        
+        // Initialize word manager
+        if (!wordManager) {
+            wordManager = new WordManager();
+        }
+        wordManager.setRepoWords(repoWords);
+        
+        // Get merged words (repo + user, with edits applied)
+        words = wordManager.getMergedWords();
+        
         initGame();
     } catch (error) {
         console.error('Error loading words:', error);
@@ -348,6 +361,302 @@ resetButton.addEventListener('click', initGame);
 
 // Theme toggle
 themeToggle.addEventListener('click', toggleTheme);
+
+// Word Manager UI Logic
+const manageWordsBtn = document.getElementById('manage-words-btn');
+const wordManagerModal = document.getElementById('word-manager-modal');
+const closeModalBtn = document.getElementById('close-modal');
+const wordTableBody = document.getElementById('word-table-body');
+const emptyState = document.getElementById('empty-state');
+const searchInput = document.getElementById('search-words');
+const filterSelect = document.getElementById('filter-words');
+const addWordBtn = document.getElementById('add-word-btn');
+const importWordsBtn = document.getElementById('import-words-btn');
+const exportWordsBtn = document.getElementById('export-words-btn');
+const importFileInput = document.getElementById('import-file-input');
+
+// Word form modal
+const wordFormModal = document.getElementById('word-form-modal');
+const wordForm = document.getElementById('word-form');
+const formTitle = document.getElementById('form-title');
+const wordGermanInput = document.getElementById('word-german');
+const wordEnglishInput = document.getElementById('word-english');
+const cancelFormBtn = document.getElementById('cancel-form-btn');
+const formSuccess = document.getElementById('form-success');
+const germanError = document.getElementById('german-error');
+const englishError = document.getElementById('english-error');
+
+let currentEditingWord = null;
+
+// Open word manager
+manageWordsBtn.addEventListener('click', () => {
+    wordManagerModal.classList.add('active');
+    refreshWordTable();
+});
+
+// Close word manager
+closeModalBtn.addEventListener('click', () => {
+    wordManagerModal.classList.remove('active');
+});
+
+// Close modal when clicking outside
+wordManagerModal.addEventListener('click', (e) => {
+    if (e.target === wordManagerModal) {
+        wordManagerModal.classList.remove('active');
+    }
+});
+
+// Refresh word table
+function refreshWordTable() {
+    const searchQuery = searchInput.value.trim();
+    const filter = filterSelect.value;
+    
+    let wordsToShow = [];
+    
+    if (searchQuery) {
+        wordsToShow = wordManager.searchWords(searchQuery);
+    } else {
+        wordsToShow = wordManager.filterWords(filter);
+    }
+    
+    // Update statistics
+    const allWords = wordManager.getAllWordsWithMetadata();
+    const repoWords = allWords.filter(w => w.source === 'repo');
+    const userWords = allWords.filter(w => w.source === 'user');
+    const editedWords = allWords.filter(w => w.isEdited);
+    const deletedWords = allWords.filter(w => w.isDeleted);
+    const activeWords = allWords.filter(w => !w.isDeleted);
+    
+    document.getElementById('total-words-count').textContent = activeWords.length;
+    document.getElementById('repo-words-count').textContent = repoWords.filter(w => !w.isDeleted).length;
+    document.getElementById('user-words-count').textContent = userWords.filter(w => !w.isDeleted).length;
+    document.getElementById('edited-words-count').textContent = editedWords.filter(w => !w.isDeleted).length;
+    document.getElementById('deleted-words-count').textContent = deletedWords.length;
+    
+    // Render table
+    if (wordsToShow.length === 0) {
+        wordTableBody.innerHTML = '';
+        emptyState.style.display = 'block';
+        return;
+    }
+    
+    emptyState.style.display = 'none';
+    wordTableBody.innerHTML = wordsToShow.map(word => {
+        const rowClass = word.isDeleted ? 'deleted' : '';
+        const statusBadges = [];
+        if (word.isEdited) statusBadges.push('<span class="status-badge edited">Edited</span>');
+        if (word.isDeleted) statusBadges.push('<span class="status-badge deleted">Deleted</span>');
+        
+        const actions = word.isDeleted
+            ? `<button class="action-btn restore" onclick="restoreWord('${escapeHtml(word.originalGerman)}')">🔄 Restore</button>`
+            : `
+                <button class="action-btn edit" onclick="editWord('${escapeHtml(word.originalGerman)}')">✏️ Edit</button>
+                <button class="action-btn delete" onclick="deleteWord('${escapeHtml(word.originalGerman)}')">🗑️ Delete</button>
+              `;
+        
+        return `
+            <tr class="${rowClass}">
+                <td>${escapeHtml(word.german)}</td>
+                <td>${escapeHtml(word.english)}</td>
+                <td><span class="source-badge ${word.source}">${word.source}</span></td>
+                <td>${statusBadges.join(' ')}</td>
+                <td>${actions}</td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Search and filter
+searchInput.addEventListener('input', refreshWordTable);
+filterSelect.addEventListener('change', refreshWordTable);
+
+// Add word
+addWordBtn.addEventListener('click', () => {
+    currentEditingWord = null;
+    formTitle.textContent = 'Add New Word';
+    wordGermanInput.value = '';
+    wordEnglishInput.value = '';
+    wordGermanInput.disabled = false;
+    formSuccess.style.display = 'none';
+    germanError.style.display = 'none';
+    englishError.style.display = 'none';
+    wordFormModal.classList.add('active');
+});
+
+// Edit word
+function editWord(originalGerman) {
+    const allWords = wordManager.getAllWordsWithMetadata();
+    const word = allWords.find(w => w.originalGerman === originalGerman);
+    
+    if (word) {
+        currentEditingWord = originalGerman;
+        formTitle.textContent = 'Edit Word';
+        wordGermanInput.value = word.german;
+        wordEnglishInput.value = word.english;
+        formSuccess.style.display = 'none';
+        germanError.style.display = 'none';
+        englishError.style.display = 'none';
+        wordFormModal.classList.add('active');
+    }
+}
+
+// Delete word
+function deleteWord(german) {
+    if (confirm(`Are you sure you want to delete "${german}"? You can restore it later.`)) {
+        wordManager.deleteWord(german);
+        refreshWordTable();
+        
+        // Reload game words
+        words = wordManager.getMergedWords();
+        if (words.length > 0) {
+            initGame();
+        }
+    }
+}
+
+// Restore word
+function restoreWord(german) {
+    wordManager.restoreWord(german);
+    refreshWordTable();
+    
+    // Reload game words
+    words = wordManager.getMergedWords();
+    if (words.length > 0) {
+        initGame();
+    }
+}
+
+// Word form submit
+wordForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const german = wordGermanInput.value.trim();
+    const english = wordEnglishInput.value.trim();
+    
+    germanError.style.display = 'none';
+    englishError.style.display = 'none';
+    
+    if (!german) {
+        germanError.textContent = 'German word is required';
+        germanError.style.display = 'block';
+        return;
+    }
+    
+    if (!english) {
+        englishError.textContent = 'English translation is required';
+        englishError.style.display = 'block';
+        return;
+    }
+    
+    try {
+        if (currentEditingWord) {
+            // Edit existing word
+            wordManager.editWord(currentEditingWord, german, english);
+            formSuccess.textContent = 'Word updated successfully!';
+        } else {
+            // Add new word
+            wordManager.addWord(german, english);
+            formSuccess.textContent = 'Word added successfully!';
+        }
+        
+        formSuccess.style.display = 'block';
+        wordGermanInput.value = '';
+        wordEnglishInput.value = '';
+        
+        // Close form after a short delay
+        setTimeout(() => {
+            wordFormModal.classList.remove('active');
+            refreshWordTable();
+            
+            // Reload game words
+            words = wordManager.getMergedWords();
+            if (words.length > 0) {
+                initGame();
+            }
+        }, 1000);
+        
+    } catch (error) {
+        if (error.message === 'Word already exists') {
+            germanError.textContent = 'This word already exists';
+            germanError.style.display = 'block';
+        } else if (error.message === 'German word already exists') {
+            germanError.textContent = 'This German word already exists';
+            germanError.style.display = 'block';
+        } else {
+            alert('Error: ' + error.message);
+        }
+    }
+});
+
+// Cancel form
+cancelFormBtn.addEventListener('click', () => {
+    wordFormModal.classList.remove('active');
+});
+
+// Close form modal when clicking outside
+wordFormModal.addEventListener('click', (e) => {
+    if (e.target === wordFormModal) {
+        wordFormModal.classList.remove('active');
+    }
+});
+
+// Import words
+importWordsBtn.addEventListener('click', () => {
+    importFileInput.click();
+});
+
+importFileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        try {
+            const importedWords = JSON.parse(event.target.result);
+            
+            if (!Array.isArray(importedWords)) {
+                alert('Invalid JSON format. Expected an array of word objects.');
+                return;
+            }
+            
+            const result = wordManager.importWords(importedWords);
+            alert(`Import complete!\nAdded: ${result.added} words\nSkipped: ${result.skipped} (already exist)`);
+            
+            refreshWordTable();
+            
+            // Reload game words
+            words = wordManager.getMergedWords();
+            if (words.length > 0) {
+                initGame();
+            }
+            
+        } catch (error) {
+            alert('Error importing file: ' + error.message);
+        }
+    };
+    reader.readAsText(file);
+    
+    // Reset file input
+    e.target.value = '';
+});
+
+// Export words
+exportWordsBtn.addEventListener('click', () => {
+    const jsonContent = wordManager.exportWords();
+    const blob = new Blob([jsonContent], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'words.json';
+    a.click();
+    URL.revokeObjectURL(url);
+});
 
 // Start game on page load
 loadTheme();
