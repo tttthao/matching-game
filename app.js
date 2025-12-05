@@ -9,8 +9,14 @@ let timerInterval = null;
 // Word Manager instance
 let wordManager = null;
 
+// Tooltip state
+let tooltipElement = null;
+let tooltipTimeout = null;
+let currentTooltipWord = null;
+
 // Constants
 const WORDS_PER_ROUND = 5;
+const TOOLTIP_DELAY = 150; // milliseconds
 
 // Statistics
 let stats = {
@@ -40,6 +46,101 @@ function shuffleArray(array) {
     }
     return shuffled;
 }
+
+// Tooltip functions
+function createTooltip() {
+    if (!tooltipElement) {
+        tooltipElement = document.createElement('div');
+        tooltipElement.className = 'word-tooltip';
+        document.body.appendChild(tooltipElement);
+    }
+    return tooltipElement;
+}
+
+function showTooltip(wordItem, germanExample) {
+    if (!germanExample) return;
+    
+    const tooltip = createTooltip();
+    tooltip.textContent = germanExample;
+    
+    // Position tooltip
+    const rect = wordItem.getBoundingClientRect();
+    const tooltipRect = tooltip.getBoundingClientRect();
+    
+    // Try to position above the word item
+    let top = rect.top - tooltipRect.height - 10;
+    let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+    
+    // If tooltip goes above viewport, position below
+    if (top < 10) {
+        top = rect.bottom + 10;
+    }
+    
+    // Keep tooltip within horizontal bounds
+    if (left < 10) {
+        left = 10;
+    } else if (left + tooltipRect.width > window.innerWidth - 10) {
+        left = window.innerWidth - tooltipRect.width - 10;
+    }
+    
+    tooltip.style.top = `${top}px`;
+    tooltip.style.left = `${left}px`;
+    
+    // Show tooltip after getting proper measurements
+    requestAnimationFrame(() => {
+        tooltip.classList.add('visible');
+    });
+}
+
+function hideTooltip() {
+    if (tooltipElement) {
+        tooltipElement.classList.remove('visible');
+    }
+    if (tooltipTimeout) {
+        clearTimeout(tooltipTimeout);
+        tooltipTimeout = null;
+    }
+    currentTooltipWord = null;
+}
+
+function setupTooltipListeners(wordItem, germanExample) {
+    if (!germanExample) return;
+    
+    // Desktop: hover
+    wordItem.addEventListener('mouseenter', () => {
+        tooltipTimeout = setTimeout(() => {
+            currentTooltipWord = wordItem;
+            showTooltip(wordItem, germanExample);
+        }, TOOLTIP_DELAY);
+    });
+    
+    wordItem.addEventListener('mouseleave', hideTooltip);
+    
+    // Mobile: long press
+    let longPressTimer = null;
+    wordItem.addEventListener('touchstart', (e) => {
+        longPressTimer = setTimeout(() => {
+            currentTooltipWord = wordItem;
+            showTooltip(wordItem, germanExample);
+        }, 500); // 500ms for long press
+    });
+    
+    wordItem.addEventListener('touchend', () => {
+        if (longPressTimer) {
+            clearTimeout(longPressTimer);
+        }
+    });
+    
+    wordItem.addEventListener('touchmove', () => {
+        if (longPressTimer) {
+            clearTimeout(longPressTimer);
+        }
+        hideTooltip();
+    });
+}
+
+// Hide tooltip on scroll
+window.addEventListener('scroll', hideTooltip);
 
 // Word history management
 function getToday() {
@@ -288,6 +389,11 @@ function initGame() {
         wordItem.addEventListener('dragstart', handleDragStart);
         wordItem.addEventListener('dragend', handleDragEnd);
         
+        // Setup tooltip if german_example exists
+        if (word.german_example) {
+            setupTooltipListeners(wordItem, word.german_example);
+        }
+        
         germanWordsContainer.appendChild(wordItem);
     });
     
@@ -456,6 +562,7 @@ const wordForm = document.getElementById('word-form');
 const formTitle = document.getElementById('form-title');
 const wordGermanInput = document.getElementById('word-german');
 const wordEnglishInput = document.getElementById('word-english');
+const wordGermanExampleInput = document.getElementById('word-german-example');
 const cancelFormBtn = document.getElementById('cancel-form-btn');
 const formSuccess = document.getElementById('form-success');
 const germanError = document.getElementById('german-error');
@@ -557,6 +664,7 @@ addWordBtn.addEventListener('click', () => {
     formTitle.textContent = 'Add New Word';
     wordGermanInput.value = '';
     wordEnglishInput.value = '';
+    wordGermanExampleInput.value = '';
     wordGermanInput.disabled = false;
     formSuccess.style.display = 'none';
     germanError.style.display = 'none';
@@ -574,6 +682,7 @@ function editWord(originalGerman) {
         formTitle.textContent = 'Edit Word';
         wordGermanInput.value = word.german;
         wordEnglishInput.value = word.english;
+        wordGermanExampleInput.value = word.german_example || '';
         formSuccess.style.display = 'none';
         germanError.style.display = 'none';
         englishError.style.display = 'none';
@@ -613,6 +722,7 @@ wordForm.addEventListener('submit', (e) => {
     
     const german = wordGermanInput.value.trim();
     const english = wordEnglishInput.value.trim();
+    const germanExample = wordGermanExampleInput.value.trim();
     
     germanError.style.display = 'none';
     englishError.style.display = 'none';
@@ -632,17 +742,18 @@ wordForm.addEventListener('submit', (e) => {
     try {
         if (currentEditingWord) {
             // Edit existing word
-            wordManager.editWord(currentEditingWord, german, english);
+            wordManager.editWord(currentEditingWord, german, english, germanExample);
             formSuccess.textContent = 'Word updated successfully!';
         } else {
             // Add new word
-            wordManager.addWord(german, english);
+            wordManager.addWord(german, english, germanExample);
             formSuccess.textContent = 'Word added successfully!';
         }
         
         formSuccess.style.display = 'block';
         wordGermanInput.value = '';
         wordEnglishInput.value = '';
+        wordGermanExampleInput.value = '';
         
         // Close form after a short delay
         setTimeout(() => {

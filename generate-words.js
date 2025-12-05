@@ -60,10 +60,15 @@ function parseCSV(filePath) {
         parts.push(current.trim().replace(/^["']|["']$/g, ''));
         
         if (parts.length >= 2) {
-            return {
+            const word = {
                 german: parts[0],
                 english: parts[1]
             };
+            // Add german_example if present (3rd column)
+            if (parts.length >= 3 && parts[2]) {
+                word.german_example = parts[2];
+            }
+            return word;
         }
         return null;
     }).filter(w => w !== null);
@@ -92,10 +97,17 @@ function parseJSON(filePath) {
     // Handle Duolingo-style export with nested structure
     if (data.words || data.vocabulary) {
         const words = data.words || data.vocabulary;
-        return words.map(item => ({
-            german: item.word || item.target || item.german,
-            english: item.translation || item.source || item.english
-        })).filter(w => w.german && w.english);
+        return words.map(item => {
+            const word = {
+                german: item.word || item.target || item.german,
+                english: item.translation || item.source || item.english
+            };
+            // Add german_example if present
+            if (item.german_example || item.example) {
+                word.german_example = item.german_example || item.example;
+            }
+            return word;
+        }).filter(w => w.german && w.english);
     }
     
     throw new Error('Unsupported JSON format');
@@ -145,14 +157,14 @@ Usage:
   node generate-words.js --duolingo <path-to-duolingo-export>
 
 CSV Format:
-  german,english
-  der Hund,the dog
-  die Katze,the cat
+  german,english,german_example
+  der Hund,the dog,Ich habe einen Hund.
+  die Katze,the cat,Die Katze ist süß.
 
 JSON Format:
   [
-    { "german": "der Hund", "english": "the dog" },
-    { "german": "die Katze", "english": "the cat" }
+    { "german": "der Hund", "english": "the dog", "german_example": "Ich habe einen Hund." },
+    { "german": "die Katze", "english": "the cat", "german_example": "Die Katze ist süß." }
   ]
 
 Options:

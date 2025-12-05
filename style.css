@@ -304,6 +304,38 @@ h2 {
     transform: translateY(0);
 }
 
+/* Tooltip styles */
+.word-tooltip {
+    position: fixed;
+    background: var(--item-bg);
+    border: 2px solid var(--button-bg);
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 0.95em;
+    color: var(--text-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    max-width: 300px;
+    word-wrap: break-word;
+}
+
+.word-tooltip.visible {
+    opacity: 1;
+}
+
+.word-tooltip::before {
+    content: '💡';
+    margin-right: 5px;
+}
+
+/* Add tooltip container for relative positioning */
+.word-item {
+    position: relative;
+}
+
 @media (max-width: 768px) {
     .game-board {
         grid-template-columns: 1fr;
