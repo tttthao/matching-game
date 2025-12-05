@@ -87,12 +87,13 @@ function selectWordsForRound(allWords, previousRoundWords) {
     }
     
     // Filter out words from the immediate previous round only
+    // Use Set for O(1) lookup performance
+    const previousWordsSet = new Set(previousRoundWords);
     const availableWords = allWords.filter(word => 
-        !previousRoundWords.includes(word.german)
+        !previousWordsSet.has(word.german)
     );
     
-    // If we don't have enough unused words (shouldn't happen with 10 words and selecting 5),
-    // just select from all words
+    // If we don't have enough unused words, just select from all words
     if (availableWords.length < WORDS_PER_ROUND) {
         const shuffled = shuffleArray(allWords);
         return shuffled.slice(0, WORDS_PER_ROUND);
