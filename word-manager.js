@@ -164,7 +164,12 @@ class WordManager {
         const conflictInRepo = this.repoWords.some(w => w.german === newGerman && w.german !== originalGerman);
         const conflictInUser = this.userWords.some(w => w.german === newGerman && w.german !== originalGerman);
         
-        if (conflictInRepo || conflictInUser) {
+        // Also check against edited words
+        const conflictInEdited = Object.entries(this.editedWords).some(([orig, edited]) => 
+            edited.german === newGerman && orig !== originalGerman
+        );
+        
+        if (conflictInRepo || conflictInUser || conflictInEdited) {
             throw new Error('German word already exists');
         }
 
@@ -198,11 +203,12 @@ class WordManager {
                 return;
             }
 
-            // Check if word exists
-            const exists = this.repoWords.some(w => w.german === word.german) ||
-                          this.userWords.some(w => w.german === word.german);
+            // Check if word exists (including edited versions)
+            const existsInRepo = this.repoWords.some(w => w.german === word.german);
+            const existsInUser = this.userWords.some(w => w.german === word.german);
+            const existsInEdited = Object.values(this.editedWords).some(w => w.german === word.german);
             
-            if (!exists) {
+            if (!existsInRepo && !existsInUser && !existsInEdited) {
                 this.userWords.push({ german: word.german, english: word.english });
                 added++;
             } else {
