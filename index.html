@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>German-English Matching Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>German-English Matching Game</h1>
+        <div class="score-board">
+            <div class="score">Score: <span id="score">0</span></div>
+            <div class="message" id="message"></div>
+        </div>
+        
+        <div class="game-board">
+            <div class="column german-column">
+                <h2>German</h2>
+                <div id="german-words" class="word-list"></div>
+            </div>
+            
+            <div class="column english-column">
+                <h2>English</h2>
+                <div id="english-words" class="word-list"></div>
+            </div>
+        </div>
+        
+        <button id="reset-btn" class="reset-button">New Game</button>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
