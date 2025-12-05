@@ -181,7 +181,7 @@ function initGame() {
         const audioBtn = document.createElement('button');
         audioBtn.className = 'audio-btn';
         audioBtn.innerHTML = '🔊';
-        audioBtn.setAttribute('aria-label', 'Pronounce word');
+        audioBtn.setAttribute('aria-label', `Pronounce ${word.german}`);
         audioBtn.onclick = (e) => {
             e.stopPropagation();
             e.preventDefault();
@@ -325,6 +325,7 @@ function checkCompletion() {
         stopTimer();
         const completionTime = getElapsedTime();
         const wordsMatched = Object.keys(matches).length;
+        // Calculate words per minute: (words / seconds) * 60
         const wpm = completionTime > 0 ? Math.round((wordsMatched / completionTime) * 60) : 0;
         
         // Update statistics
