@@ -1,5 +1,6 @@
 // Game state
 let words = [];
+let currentGameWords = []; // Words selected for the current round
 let score = 0;
 let matches = {};
 let startTime = null;
@@ -7,6 +8,9 @@ let timerInterval = null;
 
 // Word Manager instance
 let wordManager = null;
+
+// Constants
+const WORDS_PER_ROUND = 5;
 
 // Statistics
 let stats = {
@@ -35,6 +39,68 @@ function shuffleArray(array) {
         [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
     return shuffled;
+}
+
+// Word history management
+function getToday() {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+}
+
+function loadWordHistory() {
+    try {
+        const saved = localStorage.getItem('matchingGameWordHistory');
+        if (!saved) {
+            return { date: getToday(), usedWords: [] };
+        }
+        
+        const history = JSON.parse(saved);
+        
+        // Check if it's a new day - if so, reset the history
+        if (history.date !== getToday()) {
+            return { date: getToday(), usedWords: [] };
+        }
+        
+        return history;
+    } catch (error) {
+        console.error('Error loading word history:', error);
+        return { date: getToday(), usedWords: [] };
+    }
+}
+
+function saveWordHistory(usedWords) {
+    try {
+        const history = {
+            date: getToday(),
+            usedWords: usedWords
+        };
+        localStorage.setItem('matchingGameWordHistory', JSON.stringify(history));
+    } catch (error) {
+        console.error('Error saving word history:', error);
+    }
+}
+
+function selectWordsForRound(allWords, previousWords) {
+    // If we have fewer words than needed, use all available words
+    if (allWords.length <= WORDS_PER_ROUND) {
+        return allWords;
+    }
+    
+    // Filter out previously used words
+    const availableWords = allWords.filter(word => 
+        !previousWords.includes(word.german)
+    );
+    
+    // If we don't have enough unused words, reset and use all words
+    if (availableWords.length < WORDS_PER_ROUND) {
+        // Reset history and select from all words
+        const shuffled = shuffleArray(allWords);
+        return shuffled.slice(0, WORDS_PER_ROUND);
+    }
+    
+    // Shuffle available words and select the required amount
+    const shuffled = shuffleArray(availableWords);
+    return shuffled.slice(0, WORDS_PER_ROUND);
 }
 
 // Text-to-speech function for pronunciation
@@ -174,11 +240,19 @@ function initGame() {
     germanWordsContainer.innerHTML = '';
     englishWordsContainer.innerHTML = '';
     
+    // Load word history and select words for this round
+    const history = loadWordHistory();
+    currentGameWords = selectWordsForRound(words, history.usedWords);
+    
+    // Save updated history with newly selected words
+    const newUsedWords = [...history.usedWords, ...currentGameWords.map(w => w.german)];
+    saveWordHistory(newUsedWords);
+    
     // Shuffle German words
-    const shuffledGerman = shuffleArray(words);
+    const shuffledGerman = shuffleArray(currentGameWords);
     
     // Shuffle English words separately
-    const shuffledEnglish = shuffleArray(words);
+    const shuffledEnglish = shuffleArray(currentGameWords);
     
     // Create German word items (draggable)
     shuffledGerman.forEach((word, index) => {
