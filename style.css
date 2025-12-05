@@ -358,6 +358,7 @@ h2 {
         min-height: 0;
         display: flex;
         flex-direction: column;
+        /* Limit column height to 60% of viewport to enable scrolling while keeping both columns visible */
         max-height: 60vh;
     }
     
@@ -375,8 +376,12 @@ h2 {
         overflow-y: auto;
         flex: 1;
         padding-right: 5px;
+        /* Firefox scrollbar styling */
+        scrollbar-width: thin;
+        scrollbar-color: var(--button-bg) var(--border-color);
     }
     
+    /* WebKit browsers (Chrome, Safari, Edge) scrollbar styling */
     .word-list::-webkit-scrollbar {
         width: 6px;
     }
@@ -410,7 +415,8 @@ h2 {
     }
     
     .stat-item {
-        flex: 1 1 30%;
+        /* Use calc to account for gaps in flex layout */
+        flex: 1 1 calc(33.333% - 10px);
         min-width: 100px;
     }
     
