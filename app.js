@@ -460,32 +460,15 @@ function handleDragLeave(e) {
     e.currentTarget.classList.remove('drag-over');
 }
 
-function handleDrop(e) {
-    if (e.stopPropagation) {
-        e.stopPropagation();
-    }
-    
-    e.preventDefault();
-    
-    const dropZone = e.currentTarget;
-    dropZone.classList.remove('drag-over');
-    
-    // Check if drop zone is already filled
-    if (dropZone.classList.contains('filled')) {
-        return false;
-    }
-    
-    if (!draggedElement) {
-        return false;
-    }
-    
+// Shared function to process a word match
+function processMatch(wordElement, dropZone) {
     // Start timer on first move
     if (!startTime) {
         startTimer();
     }
     
-    const germanWord = draggedElement.dataset.german;
-    const correctEnglish = draggedElement.dataset.english;
+    const germanWord = wordElement.dataset.german;
+    const correctEnglish = wordElement.dataset.english;
     const dropEnglish = dropZone.dataset.english;
     
     // Check if match is correct
@@ -497,7 +480,7 @@ function handleDrop(e) {
         dropZone.textContent = `${germanWord} → ${dropEnglish}`;
         
         // Remove the dragged element
-        draggedElement.remove();
+        wordElement.remove();
         
         // Update score
         score += 10;
@@ -521,6 +504,28 @@ function handleDrop(e) {
         score = Math.max(0, score - 5);
         scoreElement.textContent = score;
     }
+}
+
+function handleDrop(e) {
+    if (e.stopPropagation) {
+        e.stopPropagation();
+    }
+    
+    e.preventDefault();
+    
+    const dropZone = e.currentTarget;
+    dropZone.classList.remove('drag-over');
+    
+    // Check if drop zone is already filled
+    if (dropZone.classList.contains('filled')) {
+        return false;
+    }
+    
+    if (!draggedElement) {
+        return false;
+    }
+    
+    processMatch(draggedElement, dropZone);
     
     return false;
 }
@@ -623,51 +628,7 @@ function handleTouchEnd(e) {
     
     // Process the drop
     if (targetDropZone && !targetDropZone.classList.contains('filled')) {
-        // Start timer on first move
-        if (!startTime) {
-            startTimer();
-        }
-        
-        const germanWord = touchDraggedElement.dataset.german;
-        const correctEnglish = touchDraggedElement.dataset.english;
-        const dropEnglish = targetDropZone.dataset.english;
-        
-        // Check if match is correct
-        const isCorrect = correctEnglish === dropEnglish;
-        
-        if (isCorrect) {
-            // Correct match
-            targetDropZone.classList.add('correct', 'filled');
-            targetDropZone.textContent = `${germanWord} → ${dropEnglish}`;
-            
-            // Remove the dragged element
-            touchDraggedElement.remove();
-            
-            // Update score
-            score += 10;
-            scoreElement.textContent = score;
-            
-            // Store match
-            matches[germanWord] = dropEnglish;
-            
-            // Check if all matches are complete
-            checkCompletion();
-        } else {
-            // Incorrect match
-            targetDropZone.classList.add('incorrect');
-            
-            // Remove incorrect class after animation
-            setTimeout(() => {
-                targetDropZone.classList.remove('incorrect');
-            }, 500);
-            
-            // Deduct score
-            score = Math.max(0, score - 5);
-            scoreElement.textContent = score;
-            
-            // Remove dragging class from original
-            touchDraggedElement.classList.remove('dragging');
-        }
+        processMatch(touchDraggedElement, targetDropZone);
     } else {
         // No valid drop zone, return to original position
         touchDraggedElement.classList.remove('dragging');
